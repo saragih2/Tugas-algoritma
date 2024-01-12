@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+struct Transaction {
+    string date;
+    string description;
+    double amount;
+};
+
+class FinancialManager {
+private:
+    vector<Transaction> transactions;
+
+public:
+    void addTransaction(const string& date, const string& description, double amount) {
+        Transaction newTransaction = {date, description, amount};
+        transactions.push_back(newTransaction);
+    }
+
+    void displayFinancialReport() {
+        double totalIncome = 0;
+        double totalExpense = 0;
+
+        cout << setw(15) << "Tanggal" << setw(25) << "Deskripsi" << setw(15) << "Jumlah" << "\n";
+        cout << setfill('-') << setw(55) << "" << setfill(' ') << "\n";
+
+        for (const Transaction& transaction : transactions) {
+            cout << setw(15) << transaction.date << setw(25) << transaction.description << setw(15) << transaction.amount << "\n";
+
+            if (transaction.amount > 0) {
+                totalIncome += transaction.amount;
+            } else {
+                totalExpense += transaction.amount;
+            }
+        }
+
+        cout << setfill('-') << setw(55) << "" << setfill(' ') << "\n";
+        cout << setw(40) << "Total Pendapatan:" << setw(15) << totalIncome << "\n";
+        cout << setw(40) << "Total Pengeluaran:" << setw(15) << totalExpense << "\n";
+        cout << setw(40) << "Saldo Akhir:" << setw(15) << totalIncome + totalExpense << "\n";
+    }
+};
+
+int main() {
+    FinancialManager financialManager;
+
+    char inputChoice;
+    do {
+        string date, description;
+        double amount;
+
+        cout << "Masukkan data transaksi:\n";
+        cout << "Tanggal (YYYY-MM-DD): ";
+        cin >> date;
+        cout << "Deskripsi: ";
+        cin.ignore(); 
+        getline(cin, description);
+        cout << "Jumlah: ";
+        cin >> amount;
+
+        financialManager.addTransaction(date, description, amount);
+
+        cout << "Ingin memasukkan transaksi lagi? (y/n): ";
+        cin >> inputChoice;
+
+    } while (inputChoice == 'y' || inputChoice == 'Y');
+
+    financialManager.displayFinancialReport();
+
+    return 0;
+}
